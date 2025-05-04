@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>MEPs Live Preview</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        .mep { border-bottom: 1px solid #ccc; padding: 1rem 0; }
+        .mep img { width: 100px; vertical-align: middle; margin-right: 1rem; }
+        .mep a { font-weight: bold; }
+    </style>
+</head>
+<body>
+<h1>List of MEPs</h1>
+<button id="load"> Load MEPs</button>
+<div id="meps"></div>
+
+<script type="module">
+    document.getElementById('load').addEventListener('click', loadMEPs);
+    const container = document.getElementById('meps');
+
+    async function loadMEPs() {
+        container.innerHTML = 'Loading...';
+        const res = await fetch('/meps');
+        const meps = await res.json();
+
+        container.innerHTML = '';
+        meps.forEach(mep => {
+            const div = document.createElement('div');
+            div.className = 'mep';
+            div.innerHTML = `
+          <img src="${mep.image}" alt="${mep.name}" />
+          <a href="${mep.url}" target="_blank">${mep.name}</a> (${mep.country})<br>
+          <small>${mep.partyGroup}</small>
+        `;
+            container.appendChild(div);
+        });
+    }
+
+    // Optional: auto load on page load
+    // loadMEPs();
+</script>
+</body>
+</html>
