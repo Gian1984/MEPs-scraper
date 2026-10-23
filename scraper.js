@@ -7,7 +7,8 @@ export const scrapeEULegislators = async () => {
   const url = 'https://www.europarl.europa.eu/meps/en/full-list/all';
   const response = await axios.get(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0',
+      'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
       'Accept-Language': 'en',
     },
   });
@@ -16,9 +17,9 @@ export const scrapeEULegislators = async () => {
 
   const $ = cheerio.load(response.data);
 
-  const meps = $('.erpl_member-list-item-content')
+  const meps = $('.es_member-list-item-content')
       .map((_, el) => {
-        const name = $(el).find('.erpl_title-h4').text().trim();
+        const name = $(el).find('.es_title-h4').text().trim();
 
         const additionalInfo = $(el).find('.sln-additional-info');
         const partyGroup = $(additionalInfo.get(0)).text().trim();
@@ -28,7 +29,7 @@ export const scrapeEULegislators = async () => {
         const idMatch = relativeUrl.match(/\/(\d+)$/);
         const id = idMatch ? idMatch[1] : null;
 
-        const image = $(el).find('span img').attr('src');
+        const image = $(el).find('img').attr('src');
 
         const normalizeName = (str) =>
             str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
